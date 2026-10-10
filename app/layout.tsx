@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jeriel Sanao | Aspiring Software Engineer",
+  title: "Jeriel Sanao",
   description:
     "Portfolio of Jeriel Sanao - BS Information Technology student at University of Mindanao, aspiring Software Engineer crafting modern web and software solutions.",
 };
@@ -35,7 +35,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         inter.variable,
-        "font-sans"
+        "font-sans",
       )}
     >
       <head>

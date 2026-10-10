@@ -1,127 +1,82 @@
 import React from "react";
-import { Wrench, Code2, Server, Database, Terminal, Cpu } from "lucide-react";
+import { SectionBadge } from "@/components/ui/section-badge";
+import { Marquee } from "@/components/ui/marquee";
+import { getSkillIcon } from "@/components/tech-icons";
 
-interface SkillCategory {
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description: string;
+interface SkillRow {
+  category: string;
   skills: string[];
 }
 
-const skillCategories: SkillCategory[] = [
+const skillRows: SkillRow[] = [
   {
-    title: "Frontend Engineering",
-    icon: Code2,
-    description: "Building responsive, accessible, and high-performance interfaces.",
-    skills: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "JavaScript (ES6+)",
-      "Tailwind CSS",
-      "HTML5 / Semantic Web",
-      "CSS3 / Animations",
-      "Responsive UI Design",
-    ],
+    category: "Frontend",
+    skills: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind"],
   },
   {
-    title: "Backend & Systems",
-    icon: Server,
-    description: "Architecting backend logic, server endpoints, and services.",
-    skills: [
-      "Node.js",
-      "Express.js",
-      "RESTful API Design",
-      "Java",
-      "Python",
-      "C# / OOP Principles",
-      "PHP",
-      "Authentication / JWT",
-    ],
+    category: "Backend",
+    skills: ["Node.js", "Express.js", "Java", "Python", "PHP", "JWT"],
   },
   {
-    title: "Databases & Storage",
-    icon: Database,
-    description: "Data modeling, relational schemas, and query optimization.",
-    skills: [
-      "MySQL",
-      "PostgreSQL",
-      "MongoDB",
-      "Database Schema Design",
-      "SQL Query Optimization",
-      "Data Normalization",
-    ],
+    category: "Database",
+    skills: ["MySQL", "PostgreSQL", "MongoDB"],
   },
   {
-    title: "Tools & DevOps Fundamentals",
-    icon: Terminal,
-    description: "Version control, workflow efficiency, and debugging utilities.",
-    skills: [
-      "Git & GitHub",
-      "VS Code",
-      "Postman (API Testing)",
-      "npm / pnpm",
-      "Command Line (Bash/PowerShell)",
-      "Turbopack / Vite",
-    ],
+    category: "Tools & DevOps",
+    skills: ["Git & GitHub", "VS Code", "Postman (API Testing)"],
   },
 ];
 
 export function SkillsSection() {
   return (
-    <section id="skills" className="py-20 border-t border-border/40 scroll-mt-12">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="space-y-2 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <Wrench className="h-3.5 w-3.5" />
-            <span>Technical Capabilities</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
-            Skills &amp; Technologies
-          </h2>
-          <p className="text-muted-foreground max-w-xl text-base">
-            Languages, frameworks, databases, and developer tools I utilize to craft modern software.
+    <section id="skills" className="space-y-8 scroll-mt-12">
+      {/* Section Header */}
+      <div className="space-y-3 text-center">
+        {/* Centered White Pill Title with Fading Lines */}
+        <SectionBadge title="Skills & Technologies" />
+
+        {/* Short Header and Subtitle */}
+        <div className="space-y-2 pt-1">
+          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            Skills Learned Over the Years
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+            These are the skills &amp; technologies that I have learned and used
+            on my academic projects. Learning these tools has taught me core
+            principles and better ways to build software efficiently.
           </p>
         </div>
+      </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {skillCategories.map((category) => {
-            const Icon = category.icon;
-            return (
-              <div
-                key={category.title}
-                className="group relative rounded-2xl bg-card border border-border/80 p-6 shadow-sm transition-all duration-200 hover:border-blue-500/50 hover:shadow-md"
-              >
-                <div className="flex items-center gap-3.5 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base sm:text-lg font-bold text-foreground">
-                      {category.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {category.description}
-                    </p>
-                  </div>
-                </div>
+      {/* Skills Showcase: 4 Marquee rows of badges */}
+      <div className="space-y-3.5 sm:space-y-4">
+        {skillRows.map((row, index) => (
+          <div key={row.category} className="relative overflow-hidden py-1">
+            {/* Left and right gradient masks */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-20 z-10 bg-gradient-to-r from-background to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-20 z-10 bg-gradient-to-l from-background to-transparent" />
 
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground border border-border/60 transition-colors hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+            <Marquee
+              pauseOnHover
+              reverse={index % 2 === 1}
+              repeat={6}
+              className="py-1 [--duration:30s] [--gap:1rem]"
+            >
+              {row.skills.map((skill) => {
+                const Icon = getSkillIcon(skill);
+                return (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold bg-card text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md hover:scale-105 transition-all duration-200 cursor-default select-none"
+                  >
+                    {Icon && <Icon className="size-5 sm:size-5.5 shrink-0" />}
+                    <span>{skill}</span>
+                  </span>
+                );
+              })}
+            </Marquee>
+          </div>
+        ))}
       </div>
     </section>
   );
