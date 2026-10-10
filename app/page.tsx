@@ -31,11 +31,11 @@ export default function Home() {
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 4}>
-              <SkillsSection />
+              <CertificationsSection />
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 5}>
-              <CertificationsSection />
+              <SkillsSection />
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 6}>

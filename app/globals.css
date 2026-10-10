@@ -59,7 +59,7 @@
   --primary: oklch(0.35 0.14 255);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.95 0.015 250);
-  --secondary-foreground: oklch(0.20 0.04 255);
+  --secondary-foreground: oklch(0.2 0.04 255);
   --muted: oklch(0.95 0.01 250);
   --muted-foreground: oklch(0.48 0.02 255);
   --accent: oklch(0.92 0.025 250);
@@ -72,14 +72,14 @@
   --chart-2: oklch(0.35 0.12 255);
   --chart-3: oklch(0.25 0.08 255);
   --chart-4: oklch(0.65 0.14 240);
-  --chart-5: oklch(0.75 0.10 230);
+  --chart-5: oklch(0.75 0.1 230);
   --radius: 0.75rem;
   --sidebar: oklch(0.985 0.005 240);
   --sidebar-foreground: oklch(0.14 0.035 255);
   --sidebar-primary: oklch(0.35 0.14 255);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.95 0.015 250);
-  --sidebar-accent-foreground: oklch(0.20 0.04 255);
+  --sidebar-accent-foreground: oklch(0.2 0.04 255);
   --sidebar-border: oklch(0.89 0.015 250);
   --sidebar-ring: oklch(0.45 0.16 255);
 }
@@ -92,9 +92,9 @@
   --card-foreground: oklch(0.985 0.005 240);
   --popover: oklch(0.15 0.035 255);
   --popover-foreground: oklch(0.985 0.005 240);
-  --primary: oklch(0.65 0.20 255);
+  --primary: oklch(0.65 0.2 255);
   --primary-foreground: oklch(0.08 0.03 255);
-  --secondary: oklch(0.20 0.04 255);
+  --secondary: oklch(0.2 0.04 255);
   --secondary-foreground: oklch(0.98 0.005 240);
   --muted: oklch(0.18 0.03 255);
   --muted-foreground: oklch(0.72 0.02 245);
@@ -103,20 +103,20 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.26 0.04 255 / 55%);
   --input: oklch(0.26 0.04 255 / 65%);
-  --ring: oklch(0.65 0.20 255);
-  --chart-1: oklch(0.65 0.20 255);
+  --ring: oklch(0.65 0.2 255);
+  --chart-1: oklch(0.65 0.2 255);
   --chart-2: oklch(0.55 0.18 250);
   --chart-3: oklch(0.45 0.14 245);
   --chart-4: oklch(0.75 0.15 240);
-  --chart-5: oklch(0.85 0.10 230);
+  --chart-5: oklch(0.85 0.1 230);
   --sidebar: oklch(0.13 0.032 255);
   --sidebar-foreground: oklch(0.985 0.005 240);
-  --sidebar-primary: oklch(0.65 0.20 255);
+  --sidebar-primary: oklch(0.65 0.2 255);
   --sidebar-primary-foreground: oklch(0.08 0.03 255);
-  --sidebar-accent: oklch(0.20 0.04 255);
+  --sidebar-accent: oklch(0.2 0.04 255);
   --sidebar-accent-foreground: oklch(0.985 0.005 240);
   --sidebar-border: oklch(0.26 0.04 255 / 55%);
-  --sidebar-ring: oklch(0.65 0.20 255);
+  --sidebar-ring: oklch(0.65 0.2 255);
 }
 
 @layer base {
@@ -141,4 +141,16 @@
 
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+/* Floating Drawer (Desktop) */
+@media (min-width: 768px) {
+  [data-slot="drawer-popup"][data-swipe-direction="right"] {
+    --drawer-inset: 0.1rem;
+    --drawer-bleed-background: transparent;
+    margin: var(--drawer-inset);
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  }
 }

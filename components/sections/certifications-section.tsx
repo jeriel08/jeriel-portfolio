@@ -1,137 +1,289 @@
-import React from "react";
-import { Award, CheckCircle, ExternalLink, ShieldCheck, Calendar } from "lucide-react";
+"use client";
 
-export interface CertificationItem {
+import Image from "next/image";
+import React, { useState } from "react";
+import { ArrowUpRight, ExternalLink, CheckCircle2 } from "lucide-react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { Lens } from "@/components/ui/lens";
+import { Badge } from "@/components/ui/badge";
+
+export interface Certification {
   id: string;
-  title: string;
+  name: string;
+  program: string;
   issuer: string;
-  issueDate: string;
-  credentialId?: string;
+  date: string;
+  fullDate: string;
   credentialUrl?: string;
   skills: string[];
-  description: string;
+  badgeUrl: string;
 }
 
-const certifications: CertificationItem[] = [
+const certifications: Certification[] = [
   {
-    id: "cert-1",
-    title: "IT Specialist - Software Development",
-    issuer: "Certiport / Pearson VUE",
-    issueDate: "2024",
-    credentialId: "VERIFIED-UM-BSIT-01",
-    skills: ["Software Engineering", "Core Algorithms", "Debugging", "OOP"],
-    description:
-      "Validates foundational knowledge of software development concepts, programming logic, object-oriented concepts, and code lifecycle.",
+    id: "cert-java",
+    name: "Java",
+    program: "Information Technology Specialist",
+    issuer: "Certiport • Pearson VUE",
+    date: "Mar 2024",
+    fullDate: "March 6, 2024",
+    credentialUrl:
+      "https://www.credly.com/badges/d7954d81-27df-4ed6-b8df-4a404d5bdadb/public_url",
+    skills: [
+      "Java SE",
+      "Object-Oriented Programming",
+      "Algorithms",
+      "Data Structures",
+    ],
+    badgeUrl: "/java.svg",
   },
   {
-    id: "cert-2",
-    title: "Foundational C# & .NET Programming",
-    issuer: "freeCodeCamp / Microsoft",
-    issueDate: "2024",
-    credentialId: "FCC-MS-CSHARP-02",
-    skills: ["C#", ".NET Core", "Object-Oriented Design", "Data Structures"],
-    description:
-      "Comprehensive certification covering foundational C# syntax, data manipulation, methods, error handling, and object-oriented application design.",
+    id: "cert-db",
+    name: "Databases",
+    program: "Information Technology Specialist",
+    issuer: "Certiport • Pearson VUE",
+    date: "Apr 2025",
+    fullDate: "April 4, 2025",
+    credentialUrl:
+      "https://www.credly.com/badges/ffc513c5-6247-469a-b95e-73f407e44f2d/public_url",
+    skills: [
+      "Database Administration",
+      "Data Manipulation",
+      "Core Database Concepts",
+      "Creating Database Objects",
+      "Data Storage",
+    ],
+    badgeUrl: "/databases.svg",
   },
   {
-    id: "cert-3",
-    title: "Responsive Web Design Certification",
-    issuer: "freeCodeCamp",
-    issueDate: "2023",
-    credentialId: "FCC-RESPONSIVE-WEB-03",
-    skills: ["HTML5", "CSS3", "Responsive Design", "Flexbox & Grid"],
-    description:
-      "Certification encompassing modern semantic HTML5 markup, advanced CSS styling, CSS Grid/Flexbox architecture, and accessible UI layout standards.",
+    id: "cert-html-css",
+    name: "HTML and CSS",
+    program: "Information Technology Specialist",
+    issuer: "Certiport • Pearson VUE",
+    date: "May 2025",
+    fullDate: "May 15, 2025",
+    credentialUrl:
+      "https://www.credly.com/badges/19683aac-a1ec-46c8-8937-5b2b615fc687/public_url",
+    skills: [
+      "HTML5 Semantics",
+      "CSS3 Architecture",
+      "Responsive Design",
+      "Flexbox & Grid",
+    ],
+    badgeUrl: "/html_and_css.svg",
+  },
+  {
+    id: "cert-networking",
+    name: "Networking",
+    program: "Information Technology Specialist",
+    issuer: "Certiport • Pearson VUE",
+    date: "Oct 2025",
+    fullDate: "October 3, 2025",
+    credentialUrl:
+      "https://www.credly.com/badges/ad22cc45-7fe8-44c0-b326-be019c4daa89/public_url",
+    skills: [
+      "Basic Network Infrastructure",
+      "Internet Protocol",
+      "Local Area Networking",
+      "Network Security",
+      "OSI Model",
+      "Wide Area Networks",
+      "Wired and Wireless Networks",
+    ],
+    badgeUrl: "/networking.svg",
+  },
+  {
+    id: "cert-security",
+    name: "Network Security",
+    program: "Information Technology Specialist",
+    issuer: "Certiport • Pearson VUE",
+    date: "Jul 2026",
+    fullDate: "July 14, 2026",
+    credentialUrl:
+      "https://www.credly.com/badges/19de208e-2abc-48be-87d7-8966ae5668fd/public_url",
+    skills: [
+      "Network Security",
+      "Operating System Security",
+      "Security Layers",
+      "Security Software",
+    ],
+    badgeUrl: "/network_security.svg",
   },
 ];
 
 export function CertificationsSection() {
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
+  const [activeCert, setActiveCert] = useState<Certification | null>(null);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const swipeDirection = isDesktop ? "right" : "down";
+
+  const handleOpenCert = (cert: Certification) => {
+    setActiveCert(cert);
+    setSelectedCert(cert);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setSelectedCert(null);
+    }
+  };
+
+  const currentCert = selectedCert || activeCert || certifications[0];
+
   return (
-    <section id="certifications" className="py-20 border-t border-border/40 scroll-mt-12">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="space-y-2 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <Award className="h-3.5 w-3.5" />
-            <span>Verified Credentials</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
-            Certifications
-          </h2>
-          <p className="text-muted-foreground max-w-xl text-base">
-            Formal technical certifications validating practical engineering skills, programming competence, and system fundamentals.
-          </p>
-        </div>
+    <section id="certifications" className="space-y-4 text-left">
+      <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+        Certifications
+      </h3>
 
-        {/* Certifications Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {certifications.map((cert) => (
-            <div
-              key={cert.id}
-              className="group flex flex-col justify-between rounded-2xl bg-card border border-border/80 p-6 shadow-sm transition-all duration-200 hover:border-blue-500/50 hover:shadow-md"
-            >
-              <div className="space-y-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <ShieldCheck className="h-5 w-5" />
+      <div className="flex flex-col gap-3">
+        {certifications.map((cert) => (
+          <button
+            key={cert.id}
+            type="button"
+            onClick={() => handleOpenCert(cert)}
+            className="group flex items-start gap-3 sm:gap-4 p-1 -mx-1 rounded-xl text-left cursor-pointer focus:outline-none"
+          >
+            {/* Credly Badge on the left */}
+            <div className="size-10 sm:size-11 rounded-full border border-border/80 bg-muted/40 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-xs mt-0.5 group-hover:border-blue-500/50 transition-colors">
+              <Image
+                src={cert.badgeUrl}
+                alt={`${cert.name} Credly Badge`}
+                width={44}
+                height={44}
+                className="size-full object-contain"
+              />
+            </div>
+
+            {/* Certification Name, Program, and Date */}
+            <div className="flex-1 min-w-0">
+              {/* Top row: Name on left, Date on right (same level) */}
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 font-semibold text-xs sm:text-sm text-foreground">
+                  <span className="truncate">{cert.name}</span>
+                  <ArrowUpRight className="size-3.5 text-muted-foreground shrink-0 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200" />
+                </span>
+                <span className="text-[11px] sm:text-xs tabular-nums text-muted-foreground text-right shrink-0 font-medium">
+                  {cert.date}
+                </span>
+              </div>
+
+              {/* Bottom row: Program & Issuer */}
+              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">
+                {cert.program}
+              </p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Certificate Drawer (Bottom on mobile, Floating on desktop) */}
+      <Drawer
+        key={swipeDirection}
+        open={!!selectedCert}
+        onOpenChange={handleOpenChange}
+        swipeDirection={swipeDirection}
+        showSwipeHandle={!isDesktop}
+      >
+        <DrawerContent className="data-[swipe-axis=y]:h-[85dvh] data-[swipe-axis=y]:max-h-[92dvh] sm:max-w-md">
+          {/* Header */}
+          <DrawerHeader className="p-5 pb-3">
+            <div className="flex flex-col gap-1 text-left">
+              <DrawerTitle className="text-base sm:text-lg font-bold text-foreground">
+                {currentCert.name}
+              </DrawerTitle>
+              <DrawerDescription className="text-xs text-muted-foreground">
+                {currentCert.program} • {currentCert.issuer}
+              </DrawerDescription>
+            </div>
+          </DrawerHeader>
+
+          {/* Drawer Body / Scrollable Content */}
+          <div className="flex-1 overflow-y-auto px-5 py-3 space-y-4">
+            {/* Status card with Credly Badge preview */}
+            <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-5 text-center space-y-4">
+              {/* Prominent Badge Preview with MagicUI Lens */}
+              <div className="flex flex-col items-center justify-center gap-1.5">
+                <Lens
+                  zoomFactor={1.7}
+                  lensSize={140}
+                  ariaLabel="Magnify Credly Badge"
+                  className="rounded-2xl cursor-zoom-in"
+                >
+                  <div className="relative size-36 sm:size-44 p-1 flex items-center justify-center drop-shadow-md">
+                    <Image
+                      src={currentCert.badgeUrl}
+                      alt={`${currentCert.name} Credly Badge`}
+                      width={176}
+                      height={176}
+                      className="size-full object-contain pointer-events-none select-none"
+                      priority
+                    />
                   </div>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle className="h-3 w-3" />
-                    Verified
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="text-base font-bold text-foreground leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {cert.title}
-                  </h3>
-                  <p className="text-xs font-medium text-muted-foreground mt-1">
-                    {cert.issuer}
-                  </p>
-                </div>
-
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
-                  {cert.description}
+                </Lens>
+                <p className="text-[10px] text-muted-foreground/70 select-none">
+                  Hover to inspect badge details
                 </p>
+              </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {cert.skills.map((skill) => (
-                    <span
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <CheckCircle2 className="size-3.5" />
+                <span>Verified Credential</span>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs text-muted-foreground">Issued Date</p>
+                <p className="text-sm font-semibold text-foreground">
+                  {currentCert.fullDate}
+                </p>
+              </div>
+
+              <div className="pt-2.5 border-t border-border/50 text-left">
+                <p className="text-xs text-muted-foreground mb-2 text-center">
+                  Verified Competencies
+                </p>
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {currentCert.skills.map((skill) => (
+                    <Badge
                       key={skill}
-                      className="px-2 py-0.5 text-[11px] rounded-md bg-secondary text-secondary-foreground font-medium"
+                      variant="outline"
+                      className="font-medium"
                     >
                       {skill}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
-
-              <div className="pt-5 mt-5 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5 font-medium">
-                  <Calendar className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                  Issued {cert.issueDate}
-                </span>
-
-                {cert.credentialUrl ? (
-                  <a
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                  >
-                    <span>View Credential</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                ) : (
-                  <span className="text-[11px] text-muted-foreground font-mono">
-                    ID: {cert.credentialId}
-                  </span>
-                )}
-              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          {/* Footer */}
+          <DrawerFooter className="p-5 pt-3 border-t border-border/40 gap-2">
+            {currentCert.credentialUrl && (
+              <a
+                href={currentCert.credentialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs cursor-pointer"
+              >
+                <span>Verify Credly</span>
+                <ExternalLink className="size-3.5" />
+              </a>
+            )}
+            <DrawerClose className="w-full py-2 px-4 rounded-xl border border-border text-foreground hover:bg-muted text-xs sm:text-sm font-medium transition-colors cursor-pointer">
+              Close
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </section>
   );
 }
