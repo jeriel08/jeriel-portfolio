@@ -1,39 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Home } from "lucide-react";
+import React from "react";
+import { Home, MessageCircle } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
+import { BlurFade } from "@/components/ui/blur-fade";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 const GITHUB_URL = "https://github.com/jeriel08";
 const LINKEDIN_URL = "https://linkedin.com";
 
-export function PortfolioDock() {
-  const [isAtTop, setIsAtTop] = useState(true);
+interface PortfolioDockProps {
+  onChatClick?: () => void;
+}
 
-  useEffect(() => {
-    const getScrollTop = () => {
-      const viewport = document.querySelector<HTMLElement>(
-        "[data-slot='scroll-area-viewport']"
-      );
-      return viewport ? viewport.scrollTop : window.scrollY;
-    };
-
-    const handleScroll = () => {
-      // Considered at "Home" when scrolled near the top
-      setIsAtTop(getScrollTop() < 200);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, {
-      capture: true,
-      passive: true,
-    });
-    return () =>
-      window.removeEventListener("scroll", handleScroll, { capture: true });
-  }, []);
-
+export function PortfolioDock({ onChatClick }: PortfolioDockProps) {
   const scrollToTop = () => {
     const viewport = document.querySelector<HTMLElement>(
       "[data-slot='scroll-area-viewport']"
@@ -45,48 +26,44 @@ export function PortfolioDock() {
     }
   };
 
+  const handleChat = () => {
+    if (onChatClick) {
+      onChatClick();
+    } else {
+      console.log("Chat clicked - chatbot modal placeholder ready");
+    }
+  };
+
   return (
-    <div className="fixed bottom-6 inset-x-0 z-50 flex justify-center pointer-events-none px-4">
-      <div className="pointer-events-auto shadow-2xl shadow-blue-950/20 dark:shadow-black/60 rounded-2xl bg-background/80 backdrop-blur-xl border border-border/80 p-1">
-        <Dock
-          iconSize={40}
-          iconMagnification={54}
-          iconDistance={110}
-          className="border-none mt-0 bg-transparent p-1 gap-1.5"
-        >
+    <div className="fixed bottom-3 inset-x-0 z-50 flex justify-center pointer-events-none px-4">
+      <BlurFade delay={0.25} className="pointer-events-auto">
+        <div className="relative rounded-full bg-background/80 backdrop-blur-xl border border-border/80 dark:border-white/10 px-2 py-1 h-[58px] flex items-center shadow-[0_4px_16px_rgba(0,0,0,0.06),0_0_12px_rgba(59,130,246,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5),0_0_14px_rgba(59,130,246,0.14)]">
+          <Dock
+            iconSize={40}
+            iconMagnification={54}
+            iconDistance={120}
+            direction="middle"
+            className="border-none m-0 bg-transparent p-0 gap-1.5 h-full items-center"
+          >
           {/* Home */}
           <DockIcon
-            className={`relative group transition-all duration-200 ${
-              isAtTop
-                ? "bg-blue-600/15 text-blue-600 dark:text-blue-400 font-semibold"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
-            }`}
+            onClick={scrollToTop}
+            className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer"
           >
-            <button
-              type="button"
-              onClick={scrollToTop}
-              aria-label="Home"
-              className="absolute inset-0 flex items-center justify-center rounded-full cursor-pointer focus:outline-none"
-            >
-              <Home className="h-5 w-5 transition-transform group-hover:scale-110" />
-              <span className="sr-only">Home</span>
-            </button>
+            <Home className="h-[52%] w-[52%]" />
+            <span className="sr-only">Home</span>
 
             {/* Tooltip */}
             <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               Home
             </span>
-
-            {isAtTop && (
-              <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 pointer-events-none" />
-            )}
           </DockIcon>
 
           {/* Separator */}
-          <div className="mx-1 h-6 w-px bg-border/70 self-center shrink-0" />
+          <div className="mx-0.5 h-4 w-px bg-border/60 self-center shrink-0" />
 
           {/* GitHub */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-all duration-200">
+          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -94,7 +71,7 @@ export function PortfolioDock() {
               aria-label="GitHub Profile"
               className="absolute inset-0 flex items-center justify-center rounded-full"
             >
-              <GithubIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+              <GithubIcon className="h-[52%] w-[52%]" />
               <span className="sr-only">GitHub</span>
             </a>
 
@@ -105,7 +82,7 @@ export function PortfolioDock() {
           </DockIcon>
 
           {/* LinkedIn */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-all duration-200">
+          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
             <a
               href={LINKEDIN_URL}
               target="_blank"
@@ -113,7 +90,7 @@ export function PortfolioDock() {
               aria-label="LinkedIn Profile"
               className="absolute inset-0 flex items-center justify-center rounded-full"
             >
-              <LinkedinIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+              <LinkedinIcon className="h-[52%] w-[52%]" />
               <span className="sr-only">LinkedIn</span>
             </a>
 
@@ -124,13 +101,27 @@ export function PortfolioDock() {
           </DockIcon>
 
           {/* Separator */}
-          <div className="mx-1 h-6 w-px bg-border/70 self-center shrink-0" />
+          <div className="mx-0.5 h-4 w-px bg-border/60 self-center shrink-0" />
+
+          {/* Chat (Chatbot Trigger) */}
+          <DockIcon
+            onClick={handleChat}
+            className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer"
+          >
+            <MessageCircle className="h-[52%] w-[52%]" />
+            <span className="sr-only">Chat</span>
+
+            {/* Tooltip */}
+            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+              Chat
+            </span>
+          </DockIcon>
 
           {/* Theme Toggler */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-all duration-200">
+          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
             <AnimatedThemeToggler
               variant="circle"
-              className="absolute inset-0 flex items-center justify-center p-0 rounded-full hover:bg-transparent focus-visible:ring-0 [&_svg]:transition-transform [&_svg]:group-hover:scale-110"
+              className="absolute inset-0 flex items-center justify-center p-0 rounded-full hover:bg-transparent focus-visible:ring-0 [&_svg]:h-[52%] [&_svg]:w-[52%]"
             />
 
             {/* Tooltip */}
@@ -140,6 +131,7 @@ export function PortfolioDock() {
           </DockIcon>
         </Dock>
       </div>
+      </BlurFade>
     </div>
   );
 }

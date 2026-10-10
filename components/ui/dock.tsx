@@ -70,7 +70,7 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
     return (
       <motion.div
         ref={ref}
-        onMouseMove={(e) => mouseX.set(e.pageX)}
+        onMouseMove={(e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
         {...props}
         className={cn(dockVariants({ className }), {
@@ -112,7 +112,6 @@ const DockIcon = ({
   ...props
 }: DockIconProps) => {
   const ref = useRef<HTMLDivElement>(null)
-  const padding = Math.max(6, size * 0.2)
   const defaultMouseX = useMotionValue(Infinity)
 
   const distanceCalc = useTransform(mouseX ?? defaultMouseX, (val: number) => {
@@ -130,21 +129,21 @@ const DockIcon = ({
 
   const scaleSize = useSpring(sizeTransform, {
     mass: 0.1,
-    stiffness: 150,
-    damping: 12,
+    stiffness: 180,
+    damping: 14,
   })
 
   return (
     <motion.div
       ref={ref}
-      style={{ width: scaleSize, height: scaleSize, padding }}
+      style={{ width: scaleSize, height: scaleSize }}
       className={cn(
         "flex aspect-square cursor-pointer items-center justify-center rounded-full transition-colors",
         className
       )}
       {...props}
     >
-      <div className="flex items-center justify-center">{children}</div>
+      <div className="flex items-center justify-center size-full">{children}</div>
     </motion.div>
   )
 }
