@@ -14,19 +14,27 @@ interface SkillRow {
 const skillRows: SkillRow[] = [
   {
     category: "Frontend",
-    skills: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind"],
+    skills: ["React", "Next.js", "Vue.js", "TypeScript", "JavaScript", "Tailwind", "Flutter"],
   },
   {
     category: "Backend",
-    skills: ["Node.js", "Express.js", "Java", "Python", "PHP", "JWT"],
+    skills: ["Node.js", "Express.js", "Java", "Python", "PHP", "Laravel", "Nest.js", "Dart"],
   },
   {
     category: "Database",
-    skills: ["MySQL", "PostgreSQL", "MongoDB"],
+    skills: ["MySQL", "PostgreSQL", "MsSQL", "SSMS", "Firebase", "Supabase", "MongoDB"],
   },
   {
     category: "Tools & DevOps",
-    skills: ["Git & GitHub", "VS Code", "Postman (API Testing)"],
+    skills: [
+      "Git & GitHub",
+      "VS Code",
+      "Postman",
+      "Scalar",
+      "Swagger",
+      "Prisma ORM",
+      "Figma",
+    ],
   },
 ];
 

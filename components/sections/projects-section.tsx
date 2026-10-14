@@ -1,6 +1,7 @@
 import React from "react";
-import { FolderGit2, ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink, Code2 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
+import { SectionBadge } from "@/components/ui/section-badge";
 
 export interface ProjectItem {
   id: string;
@@ -52,24 +53,27 @@ const projects: ProjectItem[] = [
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="py-20 border-t border-border/40 scroll-mt-12">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="space-y-2 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <FolderGit2 className="h-3.5 w-3.5" />
-            <span>Featured Portfolio Work</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
-            Projects
-          </h2>
-          <p className="text-muted-foreground max-w-xl text-base">
-            Academic software solutions, systems projects, and applications built during my degree program at University of Mindanao.
+    <section id="projects" className="space-y-8 scroll-mt-12">
+      {/* Section Header */}
+      <div className="space-y-3 text-center">
+        {/* Centered White Pill Title with Fading Lines */}
+        <SectionBadge title="Projects" />
+
+        {/* Short Header and Subtitle */}
+        <div className="space-y-2 pt-1">
+          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            From Concept to Working Systems
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+            Hands-on academic projects applying my core developer stack to solve
+            real problems&mdash;reinforcing the value of robust architecture,
+            intuitive interfaces, and efficient performance.
           </p>
         </div>
+      </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {projects.map((project) => (
             <div
               key={project.id}
@@ -148,7 +152,6 @@ export function ProjectsSection() {
             </div>
           ))}
         </div>
-      </div>
     </section>
   );
 }
