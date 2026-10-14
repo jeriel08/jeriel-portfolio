@@ -1,180 +1,192 @@
 "use client";
 
-import React, { useState } from "react";
-import { Mail, MapPin, Copy, Check, Send } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/icons";
+import React, { useState, useRef, useEffect } from "react";
+import { Mail, Copy, Check, ChevronDown, Laptop, ExternalLink } from "lucide-react";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { cn } from "@/lib/utils";
+
+// Primary contact email (update with Jeriel's active email)
+const CONTACT_EMAIL = "jeriel.sanao@gmail.com";
+
+function GmailIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="#EA4335" className={className} xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+    </svg>
+  );
+}
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
-  const email = "jeriel.sanao@example.com"; // Placeholder ready for Jeriel's actual email
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText(email);
+    navigator.clipboard.writeText(CONTACT_EMAIL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleOpenGmail = () => {
+    setIsDropdownOpen(false);
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}`;
+    window.open(gmailUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleOpenDefaultMail = () => {
+    setIsDropdownOpen(false);
+    window.location.href = `mailto:${CONTACT_EMAIL}`;
+  };
+
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDropdownOpen]);
+
   return (
-    <section id="contact" className="py-20 border-t border-border/40 scroll-mt-12 pb-36">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="space-y-2 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <Mail className="h-3.5 w-3.5" />
-            <span>Get In Touch</span>
+    <section id="contact" className="scroll-mt-12 pt-6 pb-28 sm:pb-36">
+      {/* Contact Card without overflow-hidden so the badge and dropdown float over borders */}
+      <div className="relative rounded-3xl border border-border/80 dark:border-white/10 bg-card/80 dark:bg-neutral-950/70 backdrop-blur-md pt-10 sm:pt-12 pb-8 sm:pb-10 px-6 sm:px-10 text-center shadow-xs">
+        {/* Background Animated Grid Pattern contained strictly within card bounds */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-3xl">
+          {/* Positioned above the header, fading out smoothly as it reaches the text */}
+          <div className="absolute -top-1 inset-x-0 h-44 sm:h-52 overflow-hidden">
+            <AnimatedGridPattern
+              numSquares={30}
+              maxOpacity={0.35}
+              duration={3}
+              repeatDelay={1}
+              className={cn(
+                "[mask-image:radial-gradient(ellipse_80%_70%_at_50%_0%,white_20%,transparent_100%)]",
+                "stroke-border/70 dark:stroke-white/15 fill-blue-600/10 dark:fill-blue-400/20",
+                "w-full h-full"
+              )}
+            />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
-            Contact
-          </h2>
-          <p className="text-muted-foreground max-w-xl text-base">
-            I am currently open to software engineering internships, junior developer positions, and collaborative academic opportunities.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          {/* Contact Information & Channels */}
-          <div className="md:col-span-2 space-y-4">
-            <div className="rounded-2xl bg-card border border-border/80 p-6 shadow-sm space-y-4">
-              <h3 className="text-lg font-bold text-foreground">
-                Connect Directly
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Whether you have an internship opportunity, a project to collaborate on, or just want to connect, feel free to send a message.
-              </p>
+        {/* Section Badge perched over the card border */}
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
+          <span className="inline-flex items-center justify-center rounded-full bg-background dark:bg-[#ededed] px-4 py-1 text-xs font-semibold tracking-tight text-foreground dark:text-neutral-950 shadow-sm border border-border/90 dark:border-white/20 select-none">
+            Contact
+          </span>
+        </div>
 
-              <div className="pt-2 space-y-3">
-                {/* Email Box */}
-                <div className="p-3.5 rounded-xl bg-secondary/60 border border-border/60 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                    <span className="text-xs font-medium text-foreground truncate">
-                      {email}
-                    </span>
-                  </div>
+        {/* Card Content */}
+        <div className="relative z-10 space-y-4 pt-1">
+          {/* Header */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
+            Let&apos;s Connect
+          </h2>
+
+          {/* Subtitle / Description */}
+          <p className="max-w-lg mx-auto text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
+            Want to chat about an opportunity, collaborate on a project, or
+            just talk software development? Drop me a message and I&apos;ll get
+            back to you as soon as I can.
+          </p>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+            {/* Copy Email Button */}
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-secondary/80 hover:bg-secondary text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:shadow-md transition-all duration-200 cursor-pointer active:scale-95"
+            >
+              {copied ? (
+                <>
+                  <Check className="size-4 text-emerald-500 shrink-0" />
+                  <span>Email Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="size-4 text-muted-foreground shrink-0" />
+                  <span>Copy Email</span>
+                </>
+              )}
+            </button>
+
+            {/* Write an Email Dropdown Container */}
+            <div className="relative z-30" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="true"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 transition-all duration-200 cursor-pointer active:scale-95"
+              >
+                <Mail className="size-4 shrink-0" />
+                <span>Write an Email</span>
+                <ChevronDown
+                  className={cn(
+                    "size-3.5 transition-transform duration-200 shrink-0",
+                    isDropdownOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {/* Dropdown Menu floating above the card */}
+              {isDropdownOpen && (
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 rounded-2xl bg-card dark:bg-[#141416] border border-border/80 dark:border-white/15 p-1.5 shadow-2xl z-50 animate-in fade-in-0 zoom-in-95">
                   <button
                     type="button"
-                    onClick={handleCopyEmail}
-                    className="p-1.5 rounded-md hover:bg-background text-muted-foreground hover:text-foreground transition-colors shrink-0 cursor-pointer"
-                    title="Copy email"
+                    onClick={handleOpenGmail}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
                   >
-                    {copied ? (
-                      <Check className="h-4 w-4 text-emerald-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
+                    <div className="size-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
+                      <GmailIcon className="size-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-semibold">Gmail</span>
+                        <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        Compose in web browser
+                      </p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleOpenDefaultMail}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
+                  >
+                    <div className="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                      <Laptop className="size-4 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-semibold">Default Mail App</span>
+                        <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        Open device email client
+                      </p>
+                    </div>
                   </button>
                 </div>
-
-                {/* Location */}
-                <div className="p-3.5 rounded-xl bg-secondary/60 border border-border/60 flex items-center gap-2.5">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span className="text-xs font-medium text-foreground">
-                    Davao City, Philippines
-                  </span>
-                </div>
-              </div>
-
-              {/* Social Channels */}
-              <div className="pt-3 border-t border-border/60 flex items-center gap-2.5">
-                <a
-                  href="https://github.com/jeriel08"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-secondary text-secondary-foreground text-xs font-semibold hover:bg-accent border border-border/60 transition-colors"
-                >
-                  <GithubIcon className="h-3.5 w-3.5" />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-secondary text-secondary-foreground text-xs font-semibold hover:bg-accent border border-border/60 transition-colors"
-                >
-                  <LinkedinIcon className="h-3.5 w-3.5" />
-                  <span>LinkedIn</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Message Box */}
-          <div className="md:col-span-3">
-            <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 shadow-sm">
-              <h3 className="text-lg font-bold text-foreground mb-4">
-                Send a Message
-              </h3>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
-                  const msg = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value;
-                  window.location.href = `mailto:${email}?subject=Portfolio Contact from ${encodeURIComponent(
-                    name
-                  )}&body=${encodeURIComponent(msg)}`;
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5"
-                  >
-                    Your Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    required
-                    type="text"
-                    placeholder="e.g. Jane Doe"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all placeholder:text-muted-foreground/60"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contact-email"
-                    className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5"
-                  >
-                    Your Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    name="email"
-                    required
-                    type="email"
-                    placeholder="jane@company.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all placeholder:text-muted-foreground/60"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={4}
-                    placeholder="Tell me about the opportunity or project..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all placeholder:text-muted-foreground/60 resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm transition-all shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Send className="h-4 w-4" />
-                  <span>Send Message via Email</span>
-                </button>
-              </form>
+              )}
             </div>
           </div>
         </div>

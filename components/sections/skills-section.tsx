@@ -18,7 +18,17 @@ const skillRows: SkillRow[] = [
   },
   {
     category: "Backend",
-    skills: ["Node.js", "Express.js", "Java", "Python", "PHP", "Laravel", "Nest.js", "Dart"],
+    skills: [
+      "Node.js",
+      "Express.js",
+      "Java",
+      "Python",
+      "PHP",
+      "Laravel",
+      "Nest.js",
+      "Dart",
+      "ASP.NET Core",
+    ],
   },
   {
     category: "Database",
