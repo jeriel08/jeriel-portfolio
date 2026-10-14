@@ -18,31 +18,31 @@ export default function Home() {
         <div className="relative z-10 max-w-2xl mx-auto py-12 pb-28 sm:py-24 px-6">
           {/* Main Content */}
           <main className="min-h-dvh flex flex-col gap-14 relative">
-            <BlurFade delay={BLUR_FADE_DELAY}>
+            <BlurFade delay={BLUR_FADE_DELAY * 2}>
               <HeroSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 2}>
+            <BlurFade delay={BLUR_FADE_DELAY * 3}>
               <AboutSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 3}>
+            <BlurFade delay={BLUR_FADE_DELAY * 4}>
               <EducationSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 4}>
+            <BlurFade delay={BLUR_FADE_DELAY * 5}>
               <CertificationsSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 5}>
+            <BlurFade delay={BLUR_FADE_DELAY * 6}>
               <SkillsSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 6}>
+            <BlurFade delay={BLUR_FADE_DELAY * 7}>
               <ProjectsSection />
             </BlurFade>
 
-            <BlurFade delay={BLUR_FADE_DELAY * 7}>
+            <BlurFade delay={BLUR_FADE_DELAY * 8}>
               <ContactSection />
             </BlurFade>
           </main>

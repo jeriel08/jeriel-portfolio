@@ -178,14 +178,6 @@ export function ContactSection() {
             </div>
           </div>
         </div>
-
-        {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-border/40 text-center text-xs text-muted-foreground space-y-1">
-          <p>© 2026-2027 Jeriel Sanao. All rights reserved.</p>
-          <p>
-            BS Information Technology • University of Mindanao • Designed with Next.js &amp; Magic UI
-          </p>
-        </footer>
       </div>
     </section>
   );
