@@ -57,7 +57,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors selection:bg-blue-600 selection:text-white">
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-blue-600 selection:text-white">
         {children}
       </body>
     </html>

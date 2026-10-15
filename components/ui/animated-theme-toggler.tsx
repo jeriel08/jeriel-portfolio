@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Moon, Sun } from "lucide-react"
-import { flushSync } from "react-dom"
 
 import { cn } from "@/lib/utils"
 
@@ -201,125 +200,141 @@ export const AnimatedThemeToggler = ({
     return () => observer.disconnect()
   }, [isControlled])
 
-  const toggleTheme = useCallback(() => {
-    const button = buttonRef.current
-    if (
-      !button ||
-      isTransitioningRef.current ||
-      document.documentElement.dataset.magicuiThemeVt === "active"
-    )
-      return
+  const toggleTheme = useCallback(
+    (event?: React.MouseEvent) => {
+      const button = buttonRef.current
+      if (
+        !button ||
+        isTransitioningRef.current ||
+        document.documentElement.dataset.magicuiThemeVt === "active"
+      )
+        return
 
-    // innerWidth/innerHeight (not visualViewport): percentages must resolve
-    // against the snapshot reference box, which includes classic scrollbars.
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
 
-    let x: number
-    let y: number
-    if (fromCenter) {
-      x = viewportWidth / 2
-      y = viewportHeight / 2
-    } else {
-      const { top, left, width, height } = button.getBoundingClientRect()
-      x = left + width / 2
-      y = top + height / 2
-    }
-
-    const maxRadius = Math.hypot(
-      Math.max(x, viewportWidth - x),
-      Math.max(y, viewportHeight - y)
-    )
-
-    const applyTheme = () => {
-      const newTheme = !isDark
-      // Always toggle the class synchronously so the View Transitions API
-      // snapshots the new theme inside the startViewTransition callback.
-      document.documentElement.classList.toggle("dark")
-      if (isControlled) {
-        onThemeChange?.(newTheme ? "dark" : "light")
+      let x: number
+      let y: number
+      if (fromCenter) {
+        x = viewportWidth / 2
+        y = viewportHeight / 2
+      } else if (event && event.clientX && event.clientY) {
+        x = event.clientX
+        y = event.clientY
       } else {
-        setInternalIsDark(newTheme)
-        localStorage.setItem("theme", newTheme ? "dark" : "light")
+        const { top, left, width, height } = button.getBoundingClientRect()
+        x = left + width / 2
+        y = top + height / 2
       }
-    }
 
-    if (typeof document.startViewTransition !== "function") {
-      applyTheme()
-      return
-    }
-
-    const clipPath = getThemeTransitionClipPaths(
-      shape,
-      x,
-      y,
-      maxRadius,
-      viewportWidth,
-      viewportHeight
-    )
-
-    const root = document.documentElement
-    root.dataset.magicuiThemeVt = "active"
-    root.style.setProperty(
-      "--magicui-theme-toggle-vt-duration",
-      `${duration}ms`
-    )
-    // Pin the collapsed clip-path via CSS so Firefox does not paint the new
-    // theme unclipped between snapshot and the ready.then() JS animation.
-    root.style.setProperty("--magicui-theme-vt-clip-from", clipPath[0])
-    const cleanup = () => {
-      isTransitioningRef.current = false
-      delete root.dataset.magicuiThemeVt
-      root.style.removeProperty("--magicui-theme-toggle-vt-duration")
-      root.style.removeProperty("--magicui-theme-vt-clip-from")
-      cancelAnim()
-    }
-
-    isTransitioningRef.current = true
-    const transition = document.startViewTransition(() => {
-      flushSync(applyTheme)
-    })
-    if (typeof transition?.finished?.finally === "function") {
-      transition.finished.finally(cleanup).catch(() => {})
-    } else {
-      cleanup()
-    }
-
-    const ready = transition?.ready
-    if (ready && typeof ready.then === "function") {
-      ready
-        .then(() => {
-          const anim = document.documentElement.animate(
-            {
-              clipPath,
-            },
-            {
-              duration,
-              // Star: linear avoids easing overshoot that fights polygon interpolation at t→1; VT group duration is synced above.
-              easing: shape === "star" ? "linear" : "ease-in-out",
-              fill: "forwards",
-              pseudoElement: "::view-transition-new(root)",
-            }
+      const maxRadius =
+        Math.ceil(
+          Math.hypot(
+            Math.max(x, viewportWidth - x),
+            Math.max(y, viewportHeight - y)
           )
-          activeAnimRef.current = anim
-        })
-        .catch(() => {})
-    }
-  }, [
-    shape,
-    fromCenter,
-    duration,
-    isDark,
-    isControlled,
-    onThemeChange,
-    cancelAnim,
-  ])
+        ) + 15
+
+      const applyTheme = () => {
+        const newTheme = !isDark
+        document.documentElement.classList.toggle("dark")
+        if (isControlled) {
+          onThemeChange?.(newTheme ? "dark" : "light")
+        } else {
+          setInternalIsDark(newTheme)
+          queueMicrotask(() => {
+            try {
+              localStorage.setItem("theme", newTheme ? "dark" : "light")
+            } catch {}
+          })
+        }
+      }
+
+      if (typeof document.startViewTransition !== "function") {
+        applyTheme()
+        return
+      }
+
+      const clipPath =
+        shape === "circle"
+          ? [
+              `circle(0px at ${Math.round(x)}px ${Math.round(y)}px)`,
+              `circle(${maxRadius}px at ${Math.round(x)}px ${Math.round(y)}px)`,
+            ]
+          : getThemeTransitionClipPaths(
+              shape,
+              x,
+              y,
+              maxRadius,
+              viewportWidth,
+              viewportHeight
+            )
+
+      const root = document.documentElement
+      root.dataset.magicuiThemeVt = "active"
+      root.style.setProperty(
+        "--magicui-theme-toggle-vt-duration",
+        `${duration}ms`
+      )
+      root.style.setProperty("--magicui-theme-vt-clip-from", clipPath[0])
+      const cleanup = () => {
+        isTransitioningRef.current = false
+        delete root.dataset.magicuiThemeVt
+        root.style.removeProperty("--magicui-theme-toggle-vt-duration")
+        root.style.removeProperty("--magicui-theme-vt-clip-from")
+        cancelAnim()
+      }
+
+      isTransitioningRef.current = true
+      // Direct DOM update inside startViewTransition without flushSync blocking
+      const transition = document.startViewTransition(() => {
+        applyTheme()
+      })
+      if (typeof transition?.finished?.finally === "function") {
+        transition.finished.finally(cleanup).catch(() => {})
+      } else {
+        cleanup()
+      }
+
+      const ready = transition?.ready
+      if (ready && typeof ready.then === "function") {
+        ready
+          .then(() => {
+            const anim = document.documentElement.animate(
+              {
+                clipPath,
+              },
+              {
+                duration,
+                easing:
+                  shape === "star"
+                    ? "linear"
+                    : "cubic-bezier(0.16, 1, 0.3, 1)",
+                fill: "forwards",
+                pseudoElement: "::view-transition-new(root)",
+              }
+            )
+            activeAnimRef.current = anim
+          })
+          .catch(() => {})
+      }
+    },
+    [
+      shape,
+      fromCenter,
+      duration,
+      isDark,
+      isControlled,
+      onThemeChange,
+      cancelAnim,
+    ]
+  )
 
   return (
     <button
       type="button"
       ref={buttonRef}
-      onClick={toggleTheme}
+      onClick={(e) => toggleTheme(e)}
       className={cn(
         "inline-flex items-center justify-center rounded-full p-2.5 transition-colors cursor-pointer text-foreground/80 hover:text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className

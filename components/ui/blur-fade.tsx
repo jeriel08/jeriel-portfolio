@@ -6,6 +6,7 @@ import {
   motion,
   useInView,
   type MotionProps,
+  type TargetAndTransition,
   type UseInViewOptions,
   type Variants,
 } from "motion/react"
@@ -58,7 +59,10 @@ export function BlurFade({
       [direction === "left" || direction === "right" ? "x" : "y"]: 0,
       opacity: 1,
       filter: `blur(0px)`,
-    },
+      transitionEnd: {
+        filter: "none",
+      },
+    } as TargetAndTransition,
   }
   const combinedVariants = variant ?? defaultVariants
 

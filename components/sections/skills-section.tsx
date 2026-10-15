@@ -89,7 +89,7 @@ export function SkillsSection() {
                   return (
                     <span
                       key={skill}
-                      className="inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold bg-card text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md hover:scale-105 transition-all duration-200 cursor-default select-none"
+                      className="inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold bg-card text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md hover:scale-105 transition-[border-color,color,box-shadow,transform] duration-200 cursor-default select-none"
                     >
                       {Icon && <Icon className="size-5 sm:size-5.5 shrink-0" />}
                       <span>{skill}</span>

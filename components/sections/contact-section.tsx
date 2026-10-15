@@ -90,7 +90,7 @@ export function ContactSection() {
               type="button"
               variant="outline"
               onClick={handleCopyEmail}
-              className="w-full sm:w-48 h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-all"
+              className="w-full sm:w-48 h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-[border-color,background-color,transform]"
             >
               {copied ? (
                 <>
@@ -111,7 +111,7 @@ export function ContactSection() {
                 <DropdownMenuTrigger
                   className="w-full"
                   render={
-                    <Button className="w-full h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 cursor-pointer active:scale-95 transition-all group">
+                    <Button className="w-full h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 cursor-pointer active:scale-95 transition-[background-color,box-shadow,transform] group">
                       <Mail className="size-4 shrink-0" />
                       <span>Write an Email</span>
                       <ChevronDown className="size-3.5 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />

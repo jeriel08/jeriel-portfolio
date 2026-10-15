@@ -141,9 +141,18 @@ function ScrollVelocityRowImpl({
       ro.observe(container)
       ro.observe(block)
 
-      io = new IntersectionObserver(([entry]) => {
-        isInViewRef.current = entry.isIntersecting
-      })
+      const scrollViewport = document.querySelector<HTMLElement>(
+        "[data-slot='scroll-area-viewport']"
+      )
+      io = new IntersectionObserver(
+        ([entry]) => {
+          isInViewRef.current = entry.isIntersecting
+        },
+        {
+          root: scrollViewport ?? null,
+          rootMargin: "150px",
+        }
+      )
       io.observe(container)
 
       document.addEventListener("visibilitychange", handleVisibility, {
@@ -178,6 +187,8 @@ function ScrollVelocityRowImpl({
 
   useAnimationFrame((_, delta) => {
     if (!isInViewRef.current || !isPageVisibleRef.current) return
+    // Pause during theme view transitions so 100% of GPU/CPU resources go to the circular reveal
+    if (document.documentElement.dataset.magicuiThemeVt === "active") return
     if (pauseOnHover && isHovered) return
 
     const dt = delta / 1000

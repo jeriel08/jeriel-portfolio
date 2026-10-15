@@ -77,7 +77,7 @@ export function ProjectsSection() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="group flex flex-col justify-between rounded-2xl bg-card border border-border/80 overflow-hidden shadow-sm transition-all duration-200 hover:border-blue-500/50 hover:shadow-lg hover:-translate-y-1"
+              className="group flex flex-col justify-between rounded-2xl bg-card border border-border/80 overflow-hidden shadow-sm transition-[border-color,box-shadow,transform] duration-200 hover:border-blue-500/50 hover:shadow-lg hover:-translate-y-1"
             >
               {/* Card Header Visual Accent */}
               <div className="h-32 bg-gradient-to-br from-blue-900/20 via-slate-900/10 to-indigo-900/20 dark:from-blue-950/60 dark:via-slate-900/40 dark:to-indigo-950/60 border-b border-border/60 p-5 flex flex-col justify-between relative overflow-hidden">
