@@ -15,6 +15,7 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Lens } from "@/components/ui/lens";
 import { Badge } from "@/components/ui/badge";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 export interface Certification {
   id: string;
@@ -210,7 +211,7 @@ export function CertificationsSection() {
           {/* Drawer Body / Scrollable Content */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-2 sm:py-3 space-y-3 sm:space-y-4">
             {/* Status card with Credly Badge preview */}
-            <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
+            <div className="relative overflow-hidden rounded-xl border border-border/80 bg-muted/20 p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
               {/* Prominent Badge Preview with MagicUI Lens */}
               <div className="flex flex-col items-center justify-center gap-1.5">
                 <Lens
@@ -262,6 +263,9 @@ export function CertificationsSection() {
                   ))}
                 </div>
               </div>
+
+              {/* Animated Blue Light Border Beam */}
+              <BorderBeam duration={8} size={100} />
             </div>
           </div>
 
