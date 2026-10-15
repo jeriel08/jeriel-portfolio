@@ -48,13 +48,13 @@ export function PortfolioDock({ onChatClick }: PortfolioDockProps) {
           {/* Home */}
           <DockIcon
             onClick={scrollToTop}
-            className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer"
+            className="relative group text-muted-foreground [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:bg-muted/70 active:scale-90 active:bg-muted/70 active:text-foreground cursor-pointer transition-colors"
           >
             <Home className="h-[52%] w-[52%]" />
             <span className="sr-only">Home</span>
 
-            {/* Tooltip */}
-            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+            {/* Tooltip (Desktop only) */}
+            <span className="hidden [@media(hover:hover)]:block absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               Home
             </span>
           </DockIcon>
@@ -63,39 +63,39 @@ export function PortfolioDock({ onChatClick }: PortfolioDockProps) {
           <div className="mx-0.5 h-4 w-px bg-border/60 self-center shrink-0" />
 
           {/* GitHub */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
+          <DockIcon className="relative group text-muted-foreground [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:bg-muted/70 active:scale-90 active:bg-muted/70 active:text-foreground cursor-pointer transition-colors">
             <a
               href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub Profile"
-              className="absolute inset-0 flex items-center justify-center rounded-full"
+              className="absolute inset-0 flex items-center justify-center rounded-full outline-none focus:outline-none"
             >
               <GithubIcon className="h-[52%] w-[52%]" />
               <span className="sr-only">GitHub</span>
             </a>
 
-            {/* Tooltip */}
-            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+            {/* Tooltip (Desktop only) */}
+            <span className="hidden [@media(hover:hover)]:block absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               GitHub
             </span>
           </DockIcon>
 
           {/* LinkedIn */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
+          <DockIcon className="relative group text-muted-foreground [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:bg-muted/70 active:scale-90 active:bg-muted/70 active:text-foreground cursor-pointer transition-colors">
             <a
               href={LINKEDIN_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn Profile"
-              className="absolute inset-0 flex items-center justify-center rounded-full"
+              className="absolute inset-0 flex items-center justify-center rounded-full outline-none focus:outline-none"
             >
               <LinkedinIcon className="h-[52%] w-[52%]" />
               <span className="sr-only">LinkedIn</span>
             </a>
 
-            {/* Tooltip */}
-            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+            {/* Tooltip (Desktop only) */}
+            <span className="hidden [@media(hover:hover)]:block absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               LinkedIn
             </span>
           </DockIcon>
@@ -106,26 +106,26 @@ export function PortfolioDock({ onChatClick }: PortfolioDockProps) {
           {/* Chat (Chatbot Trigger) */}
           <DockIcon
             onClick={handleChat}
-            className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer"
+            className="relative group text-muted-foreground [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:bg-muted/70 active:scale-90 active:bg-muted/70 active:text-foreground cursor-pointer transition-colors"
           >
             <MessageCircle className="h-[52%] w-[52%]" />
             <span className="sr-only">Chat</span>
 
-            {/* Tooltip */}
-            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+            {/* Tooltip (Desktop only) */}
+            <span className="hidden [@media(hover:hover)]:block absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               Chat
             </span>
           </DockIcon>
 
           {/* Theme Toggler */}
-          <DockIcon className="relative group text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer">
+          <DockIcon className="relative group text-muted-foreground [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:bg-muted/70 active:scale-90 active:bg-muted/70 active:text-foreground cursor-pointer transition-colors">
             <AnimatedThemeToggler
               variant="circle"
               className="absolute inset-0 flex items-center justify-center p-0 rounded-full hover:bg-transparent focus-visible:ring-0 [&_svg]:h-[52%] [&_svg]:w-[52%]"
             />
 
-            {/* Tooltip */}
-            <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
+            {/* Tooltip (Desktop only) */}
+            <span className="hidden [@media(hover:hover)]:block absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 ease-out origin-bottom px-2.5 py-1 text-xs font-medium rounded-md bg-foreground text-background shadow-md pointer-events-none whitespace-nowrap">
               Theme
             </span>
           </DockIcon>

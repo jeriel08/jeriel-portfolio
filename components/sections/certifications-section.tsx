@@ -194,9 +194,9 @@ export function CertificationsSection() {
         swipeDirection={swipeDirection}
         showSwipeHandle={!isDesktop}
       >
-        <DrawerContent className="data-[swipe-axis=y]:h-[85dvh] data-[swipe-axis=y]:max-h-[92dvh] sm:max-w-md">
+        <DrawerContent className="data-[swipe-axis=y]:h-[93dvh] data-[swipe-axis=y]:max-h-[96dvh] data-[swipe-axis=y]:[--drawer-content-height:93dvh] data-[swipe-axis=y]:[--drawer-content-max-height:96dvh] sm:max-w-md">
           {/* Header */}
-          <DrawerHeader className="p-5 pb-3">
+          <DrawerHeader className="p-4 sm:p-5 pb-2 sm:pb-3">
             <div className="flex flex-col gap-1 text-left">
               <DrawerTitle className="text-base sm:text-lg font-bold text-foreground">
                 {currentCert.name}
@@ -208,9 +208,9 @@ export function CertificationsSection() {
           </DrawerHeader>
 
           {/* Drawer Body / Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-5 py-3 space-y-4">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-2 sm:py-3 space-y-3 sm:space-y-4">
             {/* Status card with Credly Badge preview */}
-            <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-5 text-center space-y-4">
+            <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
               {/* Prominent Badge Preview with MagicUI Lens */}
               <div className="flex flex-col items-center justify-center gap-1.5">
                 <Lens
@@ -219,7 +219,7 @@ export function CertificationsSection() {
                   ariaLabel="Magnify Credly Badge"
                   className="rounded-2xl cursor-zoom-in"
                 >
-                  <div className="relative size-36 sm:size-44 p-1 flex items-center justify-center drop-shadow-md">
+                  <div className="relative size-32 sm:size-44 p-1 flex items-center justify-center drop-shadow-md">
                     <Image
                       src={currentCert.badgeUrl}
                       alt={`${currentCert.name} Credly Badge`}
@@ -230,7 +230,7 @@ export function CertificationsSection() {
                     />
                   </div>
                 </Lens>
-                <p className="text-[10px] text-muted-foreground/70 select-none">
+                <p className="hidden sm:block text-[10px] text-muted-foreground/70 select-none">
                   Hover to inspect badge details
                 </p>
               </div>
@@ -246,8 +246,8 @@ export function CertificationsSection() {
                 </p>
               </div>
 
-              <div className="pt-2.5 border-t border-border/50 text-left">
-                <p className="text-xs text-muted-foreground mb-2 text-center">
+              <div className="pt-2 sm:pt-2.5 border-t border-border/50 text-left">
+                <p className="text-xs text-muted-foreground mb-1.5 sm:mb-2 text-center">
                   Verified Competencies
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5">
@@ -255,7 +255,7 @@ export function CertificationsSection() {
                     <Badge
                       key={skill}
                       variant="outline"
-                      className="font-medium"
+                      className="font-medium text-[11px] sm:text-xs py-0.5 px-2"
                     >
                       {skill}
                     </Badge>
@@ -266,7 +266,7 @@ export function CertificationsSection() {
           </div>
 
           {/* Footer */}
-          <DrawerFooter className="p-5 pt-3 border-t border-border/40 gap-2">
+          <DrawerFooter className="p-4 sm:p-5 pt-2 sm:pt-3 border-t border-border/40 gap-2">
             {currentCert.credentialUrl && (
               <a
                 href={currentCert.credentialUrl}

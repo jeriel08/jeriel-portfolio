@@ -47,6 +47,19 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
     ref
   ) => {
     const mouseX = useMotionValue(Infinity)
+    const [hasHover, setHasHover] = React.useState(true)
+
+    React.useEffect(() => {
+      if (typeof window !== "undefined") {
+        const mq = window.matchMedia("(hover: hover) and (pointer: fine)")
+        setHasHover(mq.matches)
+        const handler = (e: MediaQueryListEvent) => setHasHover(e.matches)
+        mq.addEventListener("change", handler)
+        return () => mq.removeEventListener("change", handler)
+      }
+    }, [])
+
+    const isMagnificationDisabled = disableMagnification || !hasHover
 
     const renderChildren = () => {
       return React.Children.map(children, (child) => {
@@ -59,7 +72,7 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
             mouseX: mouseX,
             size: iconSize,
             magnification: iconMagnification,
-            disableMagnification: disableMagnification,
+            disableMagnification: isMagnificationDisabled,
             distance: iconDistance,
           })
         }
@@ -70,8 +83,18 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
     return (
       <motion.div
         ref={ref}
-        onMouseMove={(e) => mouseX.set(e.clientX)}
+        onMouseMove={(e) => {
+          if (hasHover) {
+            mouseX.set(e.clientX)
+          }
+        }}
         onMouseLeave={() => mouseX.set(Infinity)}
+        onTouchStart={() => mouseX.set(Infinity)}
+        onTouchEnd={() => {
+          mouseX.set(Infinity)
+          setTimeout(() => mouseX.set(Infinity), 50)
+        }}
+        onTouchCancel={() => mouseX.set(Infinity)}
         {...props}
         className={cn(dockVariants({ className }), {
           "items-start": direction === "top",

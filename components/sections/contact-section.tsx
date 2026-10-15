@@ -83,14 +83,14 @@ export function ContactSection() {
             back to you as soon as I can.
           </p>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-            {/* Copy Email Button using ShadCN Button with generous padding */}
+          {/* Action Buttons - equal size and responsive across mobile and desktop */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3 w-full max-w-xs sm:max-w-none mx-auto">
+            {/* Copy Email Button using ShadCN Button with generous padding and equal size */}
             <Button
               type="button"
               variant="outline"
               onClick={handleCopyEmail}
-              className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-all"
+              className="w-full sm:w-48 h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-all"
             >
               {copied ? (
                 <>
@@ -105,23 +105,25 @@ export function ContactSection() {
               )}
             </Button>
 
-            {/* Write an Email Dropdown using ShadCN DropdownMenu with generous button padding */}
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 cursor-pointer active:scale-95 transition-all group">
-                    <Mail className="size-4 shrink-0" />
-                    <span>Write an Email</span>
-                    <ChevronDown className="size-3.5 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-                  </Button>
-                }
-              />
-              <DropdownMenuContent
-                side="top"
-                align="center"
-                sideOffset={10}
-                className="w-60 min-w-56 p-1.5 rounded-2xl bg-popover/95 backdrop-blur-md border border-border/80 shadow-2xl z-50"
-              >
+            {/* Write an Email Dropdown using ShadCN DropdownMenu with generous button padding and equal size */}
+            <div className="w-full sm:w-48">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="w-full"
+                  render={
+                    <Button className="w-full h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 cursor-pointer active:scale-95 transition-all group">
+                      <Mail className="size-4 shrink-0" />
+                      <span>Write an Email</span>
+                      <ChevronDown className="size-3.5 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent
+                  side="top"
+                  align="center"
+                  sideOffset={10}
+                  className="w-60 min-w-56 p-1.5 rounded-2xl bg-popover/95 backdrop-blur-md border border-border/80 shadow-2xl z-50"
+                >
                 <DropdownMenuItem
                   onClick={handleOpenGmail}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
@@ -162,6 +164,7 @@ export function ContactSection() {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }

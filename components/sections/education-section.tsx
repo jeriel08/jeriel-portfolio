@@ -41,7 +41,7 @@ export function EducationSection() {
             </div>
 
             {/* Bottom row: Program */}
-            <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">
+            <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-relaxed break-words">
               Bachelor of Science in Information Technology (BSIT)
             </p>
           </div>
