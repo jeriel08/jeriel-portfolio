@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Mail, Copy, Check, ChevronDown, Laptop, ExternalLink } from "lucide-react";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-// Primary contact email (update with Jeriel's active email)
-const CONTACT_EMAIL = "jeriel.sanao@gmail.com";
+const CONTACT_EMAIL = "jerelliansanao@gmail.com";
 
 function GmailIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -18,8 +24,6 @@ function GmailIcon({ className = "size-4" }: { className?: string }) {
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(CONTACT_EMAIL);
@@ -28,46 +32,20 @@ export function ContactSection() {
   };
 
   const handleOpenGmail = () => {
-    setIsDropdownOpen(false);
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}`;
     window.open(gmailUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleOpenDefaultMail = () => {
-    setIsDropdownOpen(false);
     window.location.href = `mailto:${CONTACT_EMAIL}`;
   };
 
-  // Close dropdown on outside click or Escape key
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isDropdownOpen]);
-
   return (
-    <section id="contact" className="scroll-mt-12 pt-6 pb-28 sm:pb-36">
-      {/* Contact Card without overflow-hidden so the badge and dropdown float over borders */}
-      <div className="relative rounded-3xl border border-border/80 dark:border-white/10 bg-card/80 dark:bg-neutral-950/70 backdrop-blur-md pt-10 sm:pt-12 pb-8 sm:pb-10 px-6 sm:px-10 text-center shadow-xs">
+    <section id="contact" className="scroll-mt-12 pt-4 pb-0">
+      {/* Contact Card with same theme and border as the Projects card */}
+      <div className="relative rounded-3xl bg-card border border-border/80 shadow-sm pt-10 sm:pt-12 pb-8 sm:pb-10 px-6 sm:px-10 text-center">
         {/* Background Animated Grid Pattern contained strictly within card bounds */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-3xl">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl z-0">
           {/* Positioned above the header, fading out smoothly as it reaches the text */}
           <div className="absolute -top-1 inset-x-0 h-44 sm:h-52 overflow-hidden">
             <AnimatedGridPattern
@@ -84,9 +62,9 @@ export function ContactSection() {
           </div>
         </div>
 
-        {/* Section Badge perched over the card border */}
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
-          <span className="inline-flex items-center justify-center rounded-full bg-background dark:bg-[#ededed] px-4 py-1 text-xs font-semibold tracking-tight text-foreground dark:text-neutral-950 shadow-sm border border-border/90 dark:border-white/20 select-none">
+        {/* Section Badge perched over the card border - matching exact size and styles of projects/skills badge */}
+        <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 z-20">
+          <span className="inline-flex items-center justify-center rounded-full bg-white dark:bg-[#ededed] px-4 py-1 sm:px-5 sm:py-1.5 text-xs sm:text-sm font-semibold tracking-tight text-neutral-900 dark:text-neutral-950 shadow-xs border border-neutral-200/80 dark:border-white/10 select-none">
             Contact
           </span>
         </div>
@@ -107,11 +85,12 @@ export function ContactSection() {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-            {/* Copy Email Button */}
-            <button
+            {/* Copy Email Button using ShadCN Button with generous padding */}
+            <Button
               type="button"
+              variant="outline"
               onClick={handleCopyEmail}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-secondary/80 hover:bg-secondary text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:shadow-md transition-all duration-200 cursor-pointer active:scale-95"
+              className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-all"
             >
               {copied ? (
                 <>
@@ -124,70 +103,62 @@ export function ContactSection() {
                   <span>Copy Email</span>
                 </>
               )}
-            </button>
+            </Button>
 
-            {/* Write an Email Dropdown Container */}
-            <div className="relative z-30" ref={dropdownRef}>
-              <button
-                type="button"
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
-                aria-expanded={isDropdownOpen}
-                aria-haspopup="true"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 transition-all duration-200 cursor-pointer active:scale-95"
+            {/* Write an Email Dropdown using ShadCN DropdownMenu with generous button padding */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 cursor-pointer active:scale-95 transition-all group">
+                    <Mail className="size-4 shrink-0" />
+                    <span>Write an Email</span>
+                    <ChevronDown className="size-3.5 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent
+                side="top"
+                align="center"
+                sideOffset={10}
+                className="w-60 min-w-56 p-1.5 rounded-2xl bg-popover/95 backdrop-blur-md border border-border/80 shadow-2xl z-50"
               >
-                <Mail className="size-4 shrink-0" />
-                <span>Write an Email</span>
-                <ChevronDown
-                  className={cn(
-                    "size-3.5 transition-transform duration-200 shrink-0",
-                    isDropdownOpen && "rotate-180"
-                  )}
-                />
-              </button>
+                <DropdownMenuItem
+                  onClick={handleOpenGmail}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
+                >
+                  <div className="size-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
+                    <GmailIcon className="size-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold">Gmail</span>
+                      <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground truncate">
+                      Compose in web browser
+                    </p>
+                  </div>
+                </DropdownMenuItem>
 
-              {/* Dropdown Menu floating above the card */}
-              {isDropdownOpen && (
-                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 rounded-2xl bg-card dark:bg-[#141416] border border-border/80 dark:border-white/15 p-1.5 shadow-2xl z-50 animate-in fade-in-0 zoom-in-95">
-                  <button
-                    type="button"
-                    onClick={handleOpenGmail}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
-                  >
-                    <div className="size-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
-                      <GmailIcon className="size-4" />
+                <DropdownMenuItem
+                  onClick={handleOpenDefaultMail}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
+                >
+                  <div className="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                    <Laptop className="size-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold">Default Mail App</span>
+                      <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-semibold">Gmail</span>
-                        <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                      <p className="text-[11px] text-muted-foreground truncate">
-                        Compose in web browser
-                      </p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleOpenDefaultMail}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted/80 text-foreground transition-colors cursor-pointer group"
-                  >
-                    <div className="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                      <Laptop className="size-4 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-semibold">Default Mail App</span>
-                        <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                      <p className="text-[11px] text-muted-foreground truncate">
-                        Open device email client
-                      </p>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
+                    <p className="text-[11px] text-muted-foreground truncate">
+                      Open device email client
+                    </p>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

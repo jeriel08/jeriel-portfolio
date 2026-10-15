@@ -175,7 +175,7 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
 /* Floating Drawer (Desktop) */
 @media (min-width: 768px) {
   [data-slot="drawer-popup"][data-swipe-direction="right"] {
-    --drawer-inset: 0.1rem;
+    --drawer-inset: 0.5rem;
     --drawer-bleed-background: transparent;
     margin: var(--drawer-inset);
     border-radius: 1rem;
