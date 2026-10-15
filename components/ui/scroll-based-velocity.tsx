@@ -20,6 +20,8 @@ interface ScrollVelocityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   direction?: 1 | -1
   scrollReactivity?: boolean
   pauseOnHover?: boolean
+  draggable?: boolean
+  wheelScrollable?: boolean
 }
 
 export const wrap = (min: number, max: number, v: number) => {
@@ -90,12 +92,23 @@ function ScrollVelocityRowImpl({
   velocityFactor,
   scrollReactivity = true,
   pauseOnHover = false,
+  draggable = true,
+  wheelScrollable = true,
   ...props
 }: ScrollVelocityRowImplProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const blockRef = useRef<HTMLDivElement>(null)
   const [numCopies, setNumCopies] = useState(1)
   const [isHovered, setIsHovered] = useState(false)
+  const isHoveredRef = useRef(false)
+
+  // Drag-to-scroll interaction state
+  const isDraggingRef = useRef(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartXRef = useRef(0)
+  const dragLastXRef = useRef(0)
+  const dragVelocityRef = useRef(0)
+  const dragMomentumRef = useRef(0)
 
   const baseX = useMotionValue(0)
   const baseDirectionRef = useRef<number>(direction >= 0 ? 1 : -1)
@@ -110,6 +123,93 @@ function ScrollVelocityRowImpl({
     baseDirectionRef.current = direction >= 0 ? 1 : -1
     currentDirectionRef.current = direction >= 0 ? 1 : -1
   }, [direction])
+
+  // Wheel and trackpad horizontal scrolling
+  useEffect(() => {
+    if (!wheelScrollable) return
+    const container = containerRef.current
+    if (!container) return
+
+    let lastScrollTime = 0
+    const scrollViewport = document.querySelector<HTMLElement>(
+      "[data-slot='scroll-area-viewport']"
+    )
+
+    const onScrollActivity = () => {
+      lastScrollTime = performance.now()
+    }
+
+    scrollViewport?.addEventListener("scroll", onScrollActivity, { passive: true })
+    window.addEventListener("scroll", onScrollActivity, { passive: true })
+
+    const onWheel = (e: WheelEvent) => {
+      // 1. Explicit horizontal scroll (trackpad 2-finger horizontal swipe)
+      const isHorizontalTrackpad = Math.abs(e.deltaX) > Math.abs(e.deltaY)
+      if (isHorizontalTrackpad && Math.abs(e.deltaX) > 0) {
+        e.preventDefault()
+        baseX.set(baseX.get() + e.deltaX)
+        return
+      }
+
+      // 2. Shift + mouse wheel
+      if (e.shiftKey && e.deltaY !== 0) {
+        e.preventDefault()
+        baseX.set(baseX.get() + e.deltaY)
+        return
+      }
+
+      // 3. Vertical wheel while resting on this category:
+      // If the page wasn't actively scrolling in the last 150ms and the mouse is hovering over this category,
+      // allow the mouse wheel to scroll this category horizontally!
+      const timeSincePageScroll = performance.now() - lastScrollTime
+      if (isHoveredRef.current && timeSincePageScroll > 150) {
+        e.preventDefault()
+        baseX.set(baseX.get() + e.deltaY * 0.9)
+      }
+    }
+
+    container.addEventListener("wheel", onWheel, { passive: false })
+
+    return () => {
+      container.removeEventListener("wheel", onWheel)
+      scrollViewport?.removeEventListener("scroll", onScrollActivity)
+      window.removeEventListener("scroll", onScrollActivity)
+    }
+  }, [wheelScrollable, baseX])
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggable) return
+    if (e.button !== 0 && e.pointerType === "mouse") return
+    isDraggingRef.current = true
+    setIsDragging(true)
+    dragStartXRef.current = e.clientX
+    dragLastXRef.current = e.clientX
+    dragVelocityRef.current = 0
+    dragMomentumRef.current = 0
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {}
+  }
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return
+    const currentX = e.clientX
+    const deltaX = currentX - dragLastXRef.current
+    dragVelocityRef.current = deltaX
+    dragLastXRef.current = currentX
+    baseX.set(baseX.get() - deltaX)
+  }
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return
+    isDraggingRef.current = false
+    setIsDragging(false)
+    // Transfer flick velocity into smooth coasting momentum
+    dragMomentumRef.current = dragVelocityRef.current * 1.2
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {}
+  }
 
   useEffect(() => {
     const container = containerRef.current
@@ -189,6 +289,19 @@ function ScrollVelocityRowImpl({
     if (!isInViewRef.current || !isPageVisibleRef.current) return
     // Pause during theme view transitions so 100% of GPU/CPU resources go to the circular reveal
     if (document.documentElement.dataset.magicuiThemeVt === "active") return
+
+    // If user is actively dragging with cursor/touch, skip auto-movement
+    if (isDraggingRef.current) return
+
+    // Apply smooth inertia friction decay after release
+    if (Math.abs(dragMomentumRef.current) > 0.05) {
+      baseX.set(baseX.get() - dragMomentumRef.current)
+      dragMomentumRef.current *= 0.92
+      return
+    } else {
+      dragMomentumRef.current = 0
+    }
+
     if (pauseOnHover && isHovered) return
 
     const dt = delta / 1000
@@ -212,9 +325,23 @@ function ScrollVelocityRowImpl({
   return (
     <div
       ref={containerRef}
-      className={cn("w-full overflow-hidden whitespace-nowrap", className)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        "w-full overflow-hidden whitespace-nowrap select-none touch-pan-y",
+        draggable && (isDragging ? "cursor-grabbing" : "cursor-grab"),
+        className
+      )}
+      onMouseEnter={() => {
+        setIsHovered(true)
+        isHoveredRef.current = true
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false)
+        isHoveredRef.current = false
+      }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
       {...props}
     >
       <motion.div
