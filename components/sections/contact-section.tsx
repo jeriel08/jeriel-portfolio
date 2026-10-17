@@ -10,9 +10,56 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TextAnimate } from "@/components/ui/text-animate";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 
 const CONTACT_EMAIL = "jerelliansanao@gmail.com";
+
+const wavyVariants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    rotate: 45,
+    scale: 0.5,
+  },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    rotate: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.4,
+      y: {
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+        mass: 0.8,
+      },
+      rotate: {
+        type: "spring",
+        damping: 8,
+        stiffness: 150,
+      },
+      scale: {
+        type: "spring",
+        damping: 10,
+        stiffness: 300,
+      },
+    },
+  }),
+  exit: (i: number) => ({
+    opacity: 0,
+    y: 30,
+    rotate: 45,
+    scale: 0.5,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.4,
+    },
+  }),
+};
 
 function GmailIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -24,12 +71,29 @@ function GmailIcon({ className = "size-4" }: { className?: string }) {
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
+  const [copyCount, setCopyCount] = useState(0);
+  const copyTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const handleCopyEmail = () => {
+    if (copied) return;
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
     navigator.clipboard.writeText(CONTACT_EMAIL);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopied(false);
+      setCopyCount((prev) => prev + 1);
+    }, 2800);
   };
+
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleOpenGmail = () => {
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}`;
@@ -90,17 +154,60 @@ export function ContactSection() {
               type="button"
               variant="outline"
               onClick={handleCopyEmail}
-              className="w-full sm:w-48 h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer shadow-xs active:scale-95 transition-[border-color,background-color,transform]"
+              className={cn(
+                "relative w-full sm:w-48 h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-xl text-xs sm:text-sm font-semibold border shadow-xs active:scale-95 transition-[border-color,background-color,transform]",
+                copied
+                  ? "border-emerald-500/20 bg-emerald-500/5"
+                  : "border-border/80 hover:border-blue-500/50 hover:bg-secondary cursor-pointer"
+              )}
             >
               {copied ? (
                 <>
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Email Copied!</span>
+                  <Check className="size-4 text-emerald-500 shrink-0 animate-in zoom-in-50 duration-200" />
+                  <span className="relative inline-flex items-center overflow-hidden py-1">
+                    <TextAnimate
+                      key="email-copied"
+                      as="span"
+                      by="character"
+                      startOnView={false}
+                      variants={wavyVariants}
+                    >
+                      Email Copied!
+                    </TextAnimate>
+                  </span>
+                  <BorderBeam
+                    size={65}
+                    duration={2.5}
+                    borderWidth={2}
+                    colorFrom="#34d399"
+                    colorTo="#3b82f6"
+                    pathCornerRadius={12}
+                    transition={{
+                      repeat: 0,
+                      ease: "linear",
+                      duration: 2.5,
+                    }}
+                    containerClassName="-inset-px pointer-events-none drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                  />
                 </>
               ) : (
                 <>
-                  <Copy className="size-4 text-muted-foreground shrink-0" />
-                  <span>Copy Email</span>
+                  <Copy className="size-4 text-muted-foreground shrink-0 animate-in zoom-in-50 duration-200" />
+                  <span className="relative inline-flex items-center overflow-hidden py-1">
+                    {copyCount > 0 ? (
+                      <TextAnimate
+                        key={`copy-email-${copyCount}`}
+                        as="span"
+                        by="character"
+                        startOnView={false}
+                        variants={wavyVariants}
+                      >
+                        Copy Email
+                      </TextAnimate>
+                    ) : (
+                      <span>Copy Email</span>
+                    )}
+                  </span>
                 </>
               )}
             </Button>

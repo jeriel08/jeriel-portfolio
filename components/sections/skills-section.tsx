@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { SectionBadge } from "@/components/ui/section-badge";
 import {
@@ -5,6 +7,7 @@ import {
   ScrollVelocityRow,
 } from "@/components/ui/scroll-based-velocity";
 import { getSkillIcon } from "@/components/tech-icons";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 interface SkillRow {
   category: string;
@@ -48,6 +51,26 @@ const skillRows: SkillRow[] = [
   },
 ];
 
+function SkillBadge({ skill }: { skill: string }) {
+  const Icon = getSkillIcon(skill);
+
+  return (
+    <div className="group relative inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold bg-card text-foreground border border-border/80 shadow-xs hover:shadow-md hover:scale-105 transition-[box-shadow,transform] duration-200 cursor-inherit select-none">
+      {Icon && <Icon className="size-5 sm:size-5.5 shrink-0" />}
+      <span>{skill}</span>
+      <BorderBeam
+        size={65}
+        duration={2.5}
+        borderWidth={2}
+        colorFrom="#67e8f9"
+        colorTo="#2563eb"
+        pathCornerRadius={12}
+        containerClassName="-inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]"
+      />
+    </div>
+  );
+}
+
 export function SkillsSection() {
   return (
     <section id="skills" className="space-y-8 scroll-mt-12">
@@ -84,18 +107,9 @@ export function SkillsSection() {
               className="py-1"
             >
               <div className="inline-flex items-center gap-3 pr-3">
-                {row.skills.map((skill) => {
-                  const Icon = getSkillIcon(skill);
-                  return (
-                    <span
-                      key={skill}
-                      className="inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold bg-card text-foreground border border-border/80 shadow-xs hover:border-blue-500/50 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md hover:scale-105 transition-[border-color,color,box-shadow,transform] duration-200 cursor-inherit select-none"
-                    >
-                      {Icon && <Icon className="size-5 sm:size-5.5 shrink-0" />}
-                      <span>{skill}</span>
-                    </span>
-                  );
-                })}
+                {row.skills.map((skill) => (
+                  <SkillBadge key={skill} skill={skill} />
+                ))}
               </div>
             </ScrollVelocityRow>
           </div>
