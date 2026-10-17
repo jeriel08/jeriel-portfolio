@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import { ArrowUpRight, ExternalLink, CheckCircle2 } from "lucide-react";
+import { ChevronsRight, ExternalLink, CheckCircle2 } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -155,7 +155,7 @@ export function CertificationsSection() {
             className="group flex items-start gap-3 sm:gap-4 p-1 -mx-1 rounded-xl text-left cursor-pointer focus:outline-none"
           >
             {/* Credly Badge on the left */}
-            <div className="size-10 sm:size-11 rounded-full border border-border/80 bg-muted/40 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-xs mt-0.5 group-hover:border-blue-500/50 transition-colors">
+            <div className="size-10 sm:size-11 rounded-full border border-border/80 bg-muted/40 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-xs mt-0.5">
               <Image
                 src={cert.badgeUrl}
                 alt={`${cert.name} Credly Badge`}
@@ -171,7 +171,7 @@ export function CertificationsSection() {
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1 font-semibold text-xs sm:text-sm text-foreground">
                   <span className="truncate">{cert.name}</span>
-                  <ArrowUpRight className="size-3.5 text-muted-foreground shrink-0 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200" />
+                  <ChevronsRight className="size-3.5 text-muted-foreground shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
                 </span>
                 <span className="text-[11px] sm:text-xs tabular-nums text-muted-foreground text-right shrink-0 font-medium">
                   {cert.date}
